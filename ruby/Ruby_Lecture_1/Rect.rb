@@ -1,3 +1,7 @@
+# CMSC330 Organiztions of Programming Languages 
+# Fall 2016
+# Anwar Mamat
+
 class Shape
 	attr_reader :name
 	def initialize(name)

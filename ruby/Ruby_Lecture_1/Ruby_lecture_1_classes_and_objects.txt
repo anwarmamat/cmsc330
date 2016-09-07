@@ -330,18 +330,3 @@ end
 	ptotected
 	public
 	
-
-
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
-	

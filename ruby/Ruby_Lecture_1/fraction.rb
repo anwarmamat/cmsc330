@@ -1,3 +1,6 @@
+# CMSC330 Organizations of Programming Languages Fall 2016
+# Anwar Mamat
+# Lecture 1   Ruby classes
 #
 #	Fraction class
 #

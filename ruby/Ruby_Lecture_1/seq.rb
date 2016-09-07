@@ -1,3 +1,7 @@
+# CMSC330 Organiztions of Programming Languages 
+# Fall 2016
+# Anwar Mamat
+
 class Seq
   def initialize
     @counter = 0

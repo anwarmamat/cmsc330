@@ -1,0 +1,329 @@
+#CMSC330 Organizations of Programming Languages Fall 2016
+# Anwar Mamat
+# Lecture 2   Ruby array, Hash, Range, Code Blocks
+
+#define an empty array
+
+a = Array.new
+
+#or 
+
+a=[]
+
+#array of 4 integers
+
+a = [3,4,5,6]
+
+# zero indexed
+
+a[0]   #returns 3
+a[3]   #return 6
+a[4]   # returns nil
+a[100]  # returns nil
+
+
+b= Array.new(3)	  #b = [nil,nil,nil
+b =Array.new(5,"a")  # b = ["a", "a", "a", "a", "a"]
+
+
+
+a.size    #length of the array
+a.length  #length of the array
+
+
+a[6]=1
+#empty elements are filled with nil
+# a is [3, 4, 5, 6, nil, nil, 1] now. 
+
+a="hello"
+
+a[0] = "j"	# a now is "jello"
+
+
+
+#elements of array can have any type
+
+a= [1,"cmsc330", true,["a","b"]]
+
+a.sort		#fails. different types.
+
+a[0]    #returns 1
+a[3]    #returns ["a","b"]
+a[-1]   # last element, same as a[3]
+a[-2]	#true
+
+
+#two dimensional array
+
+a = Array.new(3) { Array.new(3) }
+
+# a now 
+[
+[nil, nil, nil], 
+[nil, nil, nil], 
+[nil, nil, nil]
+]
+
+a[1][2]=100
+
+a=
+ [
+[nil, nil, nil], 
+[nil, nil, 100], 
+[nil, nil, nil]
+]
+
+
+a=[1,2,3,4]
+b=[3,4,5,6]
+
+#adding two arrays
+a+b
+
+a+b = [1, 2, 3, 4, 3, 4, 5, 6]
+
+
+#union
+a|b
+
+a|b =  [1, 2, 3, 4, 5, 6]
+
+
+#intersection
+a&b
+
+a&b = [3, 4]
+
+
+#subtract
+a-b
+
+#[1, 2]
+
+
+#a class that uses array
+#generate sequences
+#-----------------------
+class Seq
+  def initialize
+    @counter = 0
+  end
+  
+  def next
+    @counter += 1
+  end
+end
+
+s = Seq.new
+10.times {puts s.next}
+#-----------------------
+
+
+# Bag example
+
+
+
+#use array as a stack
+#push and pop
+
+s=[]
+s.push(10)		 #[10]
+s.push 20	     #[10, 20]
+s.push (30)		 #[10, 20, 30]
+
+t = s.pop	#   t = 30,  s = [10, 20]
+
+
+#use array as a queue
+push and shift
+
+s=[]
+s.push(10)		 #[10]
+s.push 20	     #[10, 20]
+s.push (30)		 #[10, 20, 30]
+
+t = s.shift	#   t = 10,  s = [20, 30]
+
+#unshift adds the item in front of the array
+
+s.unshift(100)		# s = [100, 20, 30]
+
+
+#Hashes
+# hash is a key-value collection. Keys are unique.
+
+#create a hash
+
+h = {}
+h = Hash.new
+
+#create and initialize the hash
+
+h = {100=>"alice", 200=>"bob"}
+# Keys: 100, 200
+#values: alice, bob
+
+#list the keys
+h.keys   #[100, 200]
+h.values #["alice", "bob"]
+
+h[100]    #return "alice"
+h[200]    #returns "bob"
+
+#non-existing keys
+h[300]    #returns nil
+
+#add new key-value pair
+h[400]="charlie"
+#key can be any type
+h["alice"]=99
+
+# now h = {100=>"alice", 200=>"bob", 400=>"charlie", "alice"=>99}
+
+#create a hash with default value
+
+h = Hash.new(0)		#default value for non-existing keys is 0
+h[1]="accio"
+h[2]   #returns 0
+
+Examle:
+
+#Use hash to store the following matrix. row/column index starts with 1
+#0   5   0
+#1   0   0
+#0   0   3
+
+h = {}
+h[1]={}
+h[1][1] = 0
+h[1][2] = 5
+h[1][3] = 0
+
+h[2]={}
+h[2][1] = 1
+h[2][2] = 0
+h[2][3] = 0
+
+h[3]={}
+h[3][1] = 0
+h[3][2] = 0
+h[3][3] = 3
+
+#now h = {1=>{1=>0, 2=>5, 3=>0}, 2=>{1=>1, 2=>0, 3=>0}, 3=>{1=>0, 2=>0, 3=>3}}
+
+
+#Or we can use default value 0
+
+h=Hash.new(0)
+h[1]=Hash.new(0)
+h[1][2]=5
+
+h[2]=Hash.new(0)
+h[2][1] =1
+
+h[3]=Hash.new(0)
+h[3][3]=3
+
+#now h = {1=>{2=>5}, 2=>{1=>1}, 3=>{3=>3}} with default value of 0.
+
+
+#print the matrix
+
+(1..3).each{|i|
+	(1..3).each{|j|
+		print "#{h[i][j]}\t"
+	}
+	puts
+}
+output:
+
+0	5	0	
+1	0	0	
+0	0	3
+
+
+#merging hashes
+
+a={1=>"a",2=>"b",3=>"c"}
+b={3=>"d",4=>"e",5=>"f"}
+
+a.merge(b) # {1=>"a", 2=>"b", 3=>"d", 4=>"e", 5=>"f"}
+b.merge(a) # {3=>"c", 4=>"e", 5=>"f", 1=>"a", 2=>"b"}
+
+
+#keep the old values
+#3 keeps value c
+
+a.merge(b){|key, old, new| old}	#{1=>"a", 2=>"b", 3=>"c", 4=>"e", 5=>"f"}
+
+#Use the concat of values for keys tha exists in both hashes
+
+a.merge(b){|key, old, new| old+new}
+=> {1=>"a", 2=>"b", 3=>"cd", 4=>"e", 5=>"f"}
+
+
+#Ranges
+(a..b)	#a < b
+
+(5..10)  #is a range from 5 to 10
+(5..10).to_a 	#returns an array [5, 6, 7, 8, 9, 10]
+
+
+
+
+
+#Code blocks
+
+#a method receives arguments, and a code block. "yield" executes the code block
+
+#print an array
+a=[1,2,3,4]
+a.each{|x| print x}
+
+
+# print a hash
+a={1=>"alice",2=>"bob"}
+a.each{|k,v| print "#{k}\t#{v}\n"}
+
+
+#find
+(1..10).find {|i| i == 3}
+
+#find_all
+
+(1..10).find_all {|i| i % 3==0}
+
+#select
+
+(1..10).select{|i| i % 2 != 0}
+
+#any?
+
+
+#all?
+
+#map
+[1,2,3,4].map{|x| x*2}		#returns [2, 4, 6, 8]
+
+#collect
+#same as map
+
+
+#inject
+(2..5).inject(1){|product, n| product * n}
+
+
+
+# function receives a code block
+def say(x)
+	yield x
+end
+
+say(10) {|a| puts a}
+
+
+
+
+
+
+
