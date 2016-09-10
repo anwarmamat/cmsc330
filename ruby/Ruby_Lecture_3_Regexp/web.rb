@@ -1,3 +1,9 @@
+# CMSC330 Organiztions of Programming Languages
+# Fall 2016
+# Anwar Mamat
+
+# opens a webpage and collects all the phone numbers on that page
+
 require 'open-uri'
 open("http://admissions.umd.edu") {|src|
 
