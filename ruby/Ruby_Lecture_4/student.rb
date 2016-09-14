@@ -1,3 +1,5 @@
+# Comparable example
+
 class Student
 	attr_reader:id,:name
 	include Comparable

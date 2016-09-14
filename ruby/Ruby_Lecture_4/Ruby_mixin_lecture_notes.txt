@@ -1,3 +1,8 @@
+# CMSC330 Organiztions of Programming Languages
+# Fall 2016
+# Anwar Mamat
+
+
 #Ruby has mixins, which are somewhere between multiple inheritance
 #and interfaces.
 #They are not classes, cannot create instances
