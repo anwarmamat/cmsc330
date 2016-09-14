@@ -1,0 +1,424 @@
+#Ruby has mixins, which are somewhere between multiple inheritance
+#and interfaces.
+#They are not classes, cannot create instances
+#Classes can include code in the mixins
+
+#    To define a mixin, use module, not class
+
+
+module Doubler
+  def double
+      self +self
+  end
+end
+
+#include the mixin in a class
+class Fixnum
+  include Doubler
+end
+
+#Now, 10.double = 20
+
+#"hello".double returns error.
+
+class String
+  include Doubler
+end
+
+#now "hello".double  returns "hellohello"
+
+
+# Mixin method lookup rules:
+	when you call method m of class C
+		1. look if class C has method m
+		2. minin in class C
+		3. if multiple mixins included, later mixin shadows early mixin
+		4. C's superclass
+		5. C's superclass mixin
+		6. C's superclass's superclass
+		...
+
+# a mixin example  1
+
+module M1
+  def hello
+      "M1 hello"
+  end
+end
+
+module M2
+  def hello
+      "M2 hello"
+  end
+end
+
+class A
+  include M1
+  include M2
+  def hello
+     "A hello"
+  end
+end
+
+a = A.new
+# class A has a method hello and it is called for a.hello
+puts a.hello    # returns  A hello
+puts a.class.ancestors.inspect    #returns [A, M2, M1, Object, Kernel, BasicObject]
+
+
+#--------------------------------------------------------
+# a mixin example 2
+
+module M1
+  def hello
+      "M1 hello"
+  end
+end
+
+module M2
+  def hello
+      "M2 hello"
+  end
+end
+
+class A
+  include M1
+  include M2
+  def hello_old
+     "A hello"
+  end
+end
+
+a = A.new
+# class A does not have  a method hello. look for the mdthod hello from mixin.
+# Both M1 and M2 have a method hello. M2's hello shadows M1's hello method.
+
+puts a.hello    # returns  M2 hello
+puts a.class.ancestors.inspect    #returns [A, M2, M1, Object, Kernel, BasicObject]
+
+#--------------------------------------------------------
+
+# a mixin example 3
+module M1
+  def hello
+      "M1 hello"
+  end
+end
+
+module M2
+  def hello_old
+      "M2 hello"
+  end
+end
+
+class A
+  include M1
+  include M2
+  def hello_old
+     "A hello"
+  end
+end
+
+a = A.new
+# class A does not have  a method hello. look for the mdthod hello from mixin.
+# Only M1 has a method hello, which is called.
+
+puts a.hello    # returns  M1 hello
+puts a.class.ancestors.inspect    #returns [A, M2, M1, Object, Kernel, BasicObject]
+#---------------------------------------------
+
+
+# As puts a.class.ancestors.inspect showed, mixins are ancestors the including class. when
+# super is called, mixin methods will be called too.
+
+module M1
+       def hello
+       	   "m1 says hello, " + super
+       end
+       def what
+      	"Mary"
+      end
+end
+
+
+class A
+      def hello
+      	  "A says hello, " + what
+      end
+      def what
+      	"Alice"
+      end
+end
+
+class B < A
+      include M1
+      def hello
+          "B says hello, " + super
+      end
+      def what
+      	"Bob"
+      end
+end
+
+b = B.new
+puts B.ancestors.inspect   #[B, M1, A, Object, Kernel, BasicObject]
+puts b.hello	#B says hello, m1 says hello, A says hello, Bob
+
+#B's hello is called. super called B's superclass M1's hello. super in M1's hello
+#called hello in superclass A.  At the end, the "what" method of the current object 
+#"b" is called.
+
+
+
+# another mixin example
+# mixin ConactInfo is included in person, student and teacher classes.
+
+
+$LOAD_PATH << '.'
+require 'contact.rb'
+
+class Person
+	include ContactInfo
+end
+
+class Teacher
+	include ContactInfo
+end
+
+class Student < Person
+	attr_accessor :grades
+end
+
+s = Student.new
+s.first_name = 'David'
+s.last_name = 'Smith'
+s.city = 'College Park'
+s.zip_code = '20740'
+s.grades = 9.7
+
+puts s.full_name
+puts s.city_state_zip
+puts ContactInfo.contact
+
+
+#---------------------------
+#       contact.rb
+#---------------------------
+module ContactInfo
+	attr_accessor :first_name, :last_name, :city, :state, :zip_code
+	NAME="Alice"
+	def full_name
+		return @first_name + ' ' + last_name
+	end
+	
+	def city_state_zip
+		csz = @city
+		csz += @state if @state
+		csz += @zip_code if @zip_code
+		return csz
+	end
+	def ContactInfo.contact
+		return NAME
+	end
+end
+
+#----------------------------------------------------------
+
+
+
+# two most common mixin uses in the Ruby library:
+#  Comparable and Enumerable
+
+# you define <=> and you get ==, >, <, >=, <= from the mixin
+# (overrides Object's ==, adds the others)
+class Name
+  attr_accessor :first, :middle, :last
+  include Comparable
+  def initialize(first,last,middle="")
+    @first = first
+    @last = last
+    @middle = middle
+  end
+  def <=> other   
+    l = @last <=> other.last # <=> defined on strings
+    return l if l != 0
+    f = @first <=> other.first
+    return f if f != 0
+    @middle <=> other.middle
+  end
+end
+
+
+# including Enumerable
+# define each and you get map, collect, select, inject, any?, etc.
+class MyRange
+  include Enumerable  #map,select, inject, collect, find
+  def initialize(low,high)
+    @low = low    #(2,8)
+    @high = high
+  end
+  def each
+    i=@low
+    while i <= @high
+      yield i
+      i=i+1
+    end
+  end
+end
+
+#Here is how Enumerable implements collect 
+
+def my_collect(a)
+  b = Array.new(a.length)
+  0.upto(a.length-1) { |i|
+    b[i] = yield(a[i])
+  }
+  return b
+end
+
+b = my_collect([5, 6, 7]) { |x| x*2 }
+puts b.inspect
+#-------------------------
+
+
+
+#Proc and code blocks
+
+
+#ruby methods receive an implicit code block
+
+def do_it_twice 
+  return "No block" unless block_given? 
+  yield 
+  yield 
+end
+
+do_it_twice {puts "hello"}  
+
+# returns
+
+hello
+hello
+
+#Code block is not an object
+# Proc makes an object out of code blocks
+
+t = Proc.new{|x| x+2}
+
+# a method that receives a proc object
+def say(p)
+  p.call 10
+end
+
+say(t)   # return 12 
+
+
+
+
+# apply a proc to an array
+
+double = Proc.new {|x| x * 2}
+
+def apply (f, list)
+	a=[]
+	0.upto(list.length-1){|i|
+		a.push(f.call list[i])
+	}
+	return a
+end
+
+b = apply double, [1,2,3,4]
+puts b.inspect
+
+#  [2, 4, 6, 8]
+
+
+
+# implicit code block example
+
+def twice
+  yield
+  yield
+end
+x = 1
+twice {x += 1}
+puts x  # 3
+
+
+
+
+# explicit code block example
+
+x = 100
+def quad (&block) # explicit block
+  c = block       # no ampersand!
+  twice (c)       # used as argument
+  twice (c)
+end
+
+def twice c	   # arg = explicit closure
+  c.call          # invoke with .call
+  c.call
+end
+
+
+# quad (block) (without the &) receives proc object. 
+# &block receives a code block 
+
+
+quad { x += 1 }   # same as x += 4
+
+puts x
+
+
+# proc and code block example 
+
+p = Proc.new {|x|x+1}
+
+def foo1(b)
+	b.call 10
+end
+
+foo(p)
+
+
+def foo2(&b)
+	b.call 10
+end
+
+# foo2 receives an explicit code block and makes an proc obejct and call
+foo2 {|x| x+1}
+
+
+# foo3 receives an implicit code block 
+def foo3
+	yield 10
+end
+
+foo3{|x| x+1}
+#or send a proc as a code block
+foo3(&p)
+#--------------------------------------------------
+
+
+
+# Use code block  in regexp scan
+# We have a text file, and we want to calculate the sum of each column
+12 34 23
+19 77 87
+11 98 3
+2 45 0
+
+
+
+sum_a = sum_b = sum_c = 0
+
+while line = DATA.gets
+  line.scan(/(\d+)\s+(\d+)\s+(\d+)/) { |a,b,c|
+    sum_a += a.to_i
+    sum_b += b.to_i
+    sum_c += c.to_i
+  }
+end
+printf("Total: %d %d %d\n", sum_a, sum_b, sum_c)
+

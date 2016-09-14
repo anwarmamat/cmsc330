@@ -1,0 +1,30 @@
+╔═══════════════╦═══════════════════════════╦═════════════════════════════════╗
+║               ║ class                     ║ module                          ║
+╠═══════════════╬═══════════════════════════╬═════════════════════════════════╣
+║ instantiation ║ can be instantiated       ║ can *not* be instantiated       ║
+╟───────────────╫───────────────────────────╫─────────────────────────────────╢
+║ usage         ║ object creation           ║ mixin facility. provide         ║
+║               ║                           ║   a namespace.                  ║
+╟───────────────╫───────────────────────────╫─────────────────────────────────╢
+║ superclass    ║ object                    ║ module                          ║
+╟───────────────╫───────────────────────────╫─────────────────────────────────╢
+║ consists of   ║ methods, constants,       ║ methods, constants,             ║
+║               ║   and variables           ║   and classes                   ║
+╟───────────────╫───────────────────────────╫─────────────────────────────────╢
+║ methods       ║ class methods,            ║ module methods,                 ║
+║               ║   instance methods        ║   instance methods              ║
+╟───────────────╫───────────────────────────╫─────────────────────────────────╢
+║ inheritance   ║ inherits behavior and can ║ No inheritance                  ║
+║               ║   be base for inheritance ║                                 ║
+╟───────────────╫───────────────────────────╫─────────────────────────────────╢
+║ inclusion     ║ cannot be included        ║ can be included in classes and  ║
+║               ║                           ║   modules by using the include  ║
+║               ║                           ║   command (includes all         ║
+║               ║                           ║   instance methods as instance  ║
+║               ║                           ║   methods in class/module)      ║
+╟───────────────╫───────────────────────────╫─────────────────────────────────╢
+║ extension     ║ can not extend with       ║ module can extend instance by   ║
+║               ║   extend command          ║   using extend command (extends ║
+║               ║   (only with inheritance) ║   given instance with singleton ║
+║               ║                           ║   methods from module)          ║
+╚═══════════════╩═══════════════════════════╩═════════════════════════════════╝
