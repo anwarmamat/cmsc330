@@ -1,0 +1,342 @@
+
+
+(* A small OCaml program (* with nested comments *) *)
+
+let x = 37;;
+let y = x + 5;;
+print_int y;;
+print_string "\n";;
+
+
+
+(*    Strictly typed  *)
+
+print_int "This function expected an int";;
+
+1 + true;;
+
+1 + 0.5;;
+
+
+
+(*	Let		*)
+
+(* 'let' constructs *)
+
+let x = 47;;
+
+
+(* Often used for _local_ variables *)
+
+let pi = 3.14 in            (*   {                       *)
+    pi *. 3.0 *. 3.0;;      (*       float pi = 3.14;    *)
+                            (*       pi * 3.0 * 3.0;     *)
+                            (*   }                       *)
+print_float pi;;            (*   printf("%f", pi);       *)
+
+
+let x = 47;; (* overrides earlier definition *)
+let x = 13 in x + 5;; (* overrides earlier one; uses it first *)
+x;;
+
+
+(* "let x = expression1 in expression2" -- what gets run when? *)
+
+let x = print_string "ran e1\n" in print_string "ran e2\n";;
+
+
+
+
+y;;     (*   Unbound value y  *)
+
+let y = 1 in y + 1;;		(*   int = 2   *)
+
+let y = y in y + 1;;		(* Unbound value y *)  (* y at right hand side of y=y is unbound  *)
+
+let y = 4 in let y = y + 1 in y;;   (* 5 *)
+
+
+
+(* Type annotations *)
+
+
+let (x : int) = 3           (* "x has type int" *)
+let z = (x : int) + 5
+
+
+
+(* _Very_ useful for debugging *)
+
+let area_of_int (x:int) : float =
+    (float_of_int x) *. 3.14 *. 3.14;;
+
+area_of_int(3);;
+
+
+
+
+(* Conditionals *)
+
+let print_grade score =
+    if score >= 90 then 
+        print_string "You got an A\n"
+    else if score >= 80 then
+        print_string "You got an B\n"
+    else if score >= 70 then
+        print_string "You got an C\n"
+    else
+        print_string "Let's all practice OCaml\n";;
+
+print_grade 100;;
+
+
+let is_the_answer y =
+    let answer = 42 in
+    y = answer;;            (* how do you grok this? *)
+
+is_the_answer 17;;		(* false *)
+is_the_answer 42;;		(*  true  *)
+
+
+(* Comparing other types *)
+
+let eq (x,y) = x = y;;      (* = is polymorphic, too *)
+
+eq(3, 3);;
+
+let x = "hi";;
+let y = x;;
+eq(x,y);;
+
+eq("hi", "hi");;
+
+
+
+(* == *)
+
+let eqeq(x,y) = x == y;;
+
+(* What is an _experiment_ we could run to figure out = vs. == ? *)
+
+eqeq(3, 3);;
+
+let x = "hi";;
+let y = x;;
+eqeq(x, y);;
+
+eqeq("hi", "hi");;
+
+
+
+(*    LIST    *)
+
+(* A first taste of lists in OCaml *)
+
+
+[1;2;3];;        (* primitive data type *)
+
+[ [1;2]; [3;4] ] (* nested lists *)
+
+[];;             (* empty list *)
+
+(* What are the types of the above lists? *)
+
+
+
+(* Constructing lists *)
+
+3 :: [];;
+2 :: (3 :: []);;
+1::2::3::[];;
+
+let x = [1;2;3];;
+let y = 4 :: x;;
+
+let y = x :: 4;;   (* does not work; "A :: B" means that
+                        B should be a list containing
+                        whatever type A is *)
+
+(* construct a 'z' such that the following works: *)
+let y = x :: z;;
+
+
+(* More list type practice *)
+
+[[[]; []; [1.3;2.4]]];;
+
+
+(*  -------------------------------------- 
+
+[1; 2; "lists must be homogeneous"];;
+
+[1, 2, 3];;  (* probably not what you expect; 
+                this list has _one_ element *)
+
+[1;2] :: 3   (* expects a list on the right of :: *)
+
+
+let hd ls = match ls with (h::_) -> h;;
+hd [];;
+
+
+*)
+
+
+
+
+
+(* Polymorphic types *)
+
+let hd (h::_) = h;;
+
+(* We know hd works on any kind of list, i.e., it's polymorphic: *)
+hd [1; 2; 3]
+hd ["now"; "they're"; "strings"]
+hd [("and", 1); ("now", 2); ("tuples", 3)]
+
+(* So what is hd's type? *)
+
+
+
+(* Some polymorphic functions *)
+let tl (_::t) = t
+
+let swap (x,y) = (y,x)
+
+let tls(_::xs, _::ys) = (xs, ys)
+
+let eq(x,y) = x = y     (* how do you parse this? *)
+
+
+
+
+
+
+(* Pattern matching:
+   
+    match e with 
+       p1 -> e1
+     | p2 -> e2
+     | p3 -> e3
+*)
+
+
+match 1+2 with
+    3 -> true
+  | i -> false;;
+
+
+let is_odd x =
+    match x mod 2 with
+    0 -> false
+  | 1 -> true
+  | _ -> raise (Invalid_argument "is_odd");;    (* why do we need this? *)
+
+
+# let imply v = match v with 
+     (true,true)   -> true
+   | (true,false)  -> false
+   | (false,true)  -> true
+   | (false,false) -> true;;
+val imply : bool * bool -> bool = <fun>
+
+
+# let imply v = match v with 
+     (true,x)  -> x
+   | (false,x) -> true;;
+val imply : bool * bool -> bool = <fun>
+
+
+
+(* Now let's work with lists *)
+let x = [1;2];;
+match x with 
+    []  -> print_string "x is an empty list\n"
+  | _   -> print_string "x is anything but an empty list\n";;
+
+
+(* A function with pattern matching; this will get familiar *)
+let is_empty ls = 
+    match ls with
+    [] -> true
+  | (h::t) -> false;;
+
+is_empty [];;
+is_empty [1;2];;
+is_empty [1];;
+is_empty [ [] ];;
+
+
+(* The matching patterns can be really powerful! *)
+let is_vowel = function
+    ('a' | 'e' | 'i' | 'o' | 'u') -> true
+  | _ -> false;;
+
+let is_upper = function
+    'A' .. 'Z' -> true
+    | _ -> false;;
+
+
+
+(* The matching patterns are BINDING *)
+let hd ls = 
+    match ls with 
+    (h::t) -> h;;
+
+hd [1;2;3];;
+hd [1];;
+hd(hd [ [4;3]; [2;1] ]);;
+(* hd [];; *)
+
+
+(* Practice: Implement tl *)
+(* Practice: construct a list ls such that hd(tl(hd ls)) returns 330 *)
+
+
+(* Coding with wildcards *)
+
+let is_empty ls =
+    match ls with
+    [] -> true
+  | (_::_) -> false
+
+
+let hd ls = 
+    match ls with
+    (h::_) -> h
+
+(* More examples *)
+let f ls =
+    match ls with (h1::(h2::_)) -> h1 + h2;;
+
+f [2;4;8];;
+
+
+let g ls = 
+    match ls with [h1; h2] -> h1 + h2;;
+g [1;2];;
+(* g [1;2;3];; *)
+
+
+(* Abbreviated pattern matching 
+ *    "let f p = e" 
+ *       is the same as 
+ *    "let f x = match x with p -> e"
+ *)
+
+let hd (h::_) = h
+let f(x::y::_) = x + y
+let g [x; y] = x + y
+
+
+(* You probably won't do things quite like the following, but... *)
+let addFirsts ((x::_) :: (y::_) :: _) = x + y;;
+
+addFirsts [ [1;2;3]; [4;5]; [7;8;9] ];;
+(* Will the following work? *)
+(* addFirsts [ [1;2;3]; [4;5]; [7;8;9]; [10;11;12] ];; *)
+
+
+
+
+
