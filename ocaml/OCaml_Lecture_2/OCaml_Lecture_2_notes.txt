@@ -262,6 +262,26 @@ let rec fold f a l =
 	|h::t->fold f (f a h) t
 ;;
 
+
+fold (fun x y->x+y) 0 [1;2;3;4;5];;
+(* returns 15  *)
+
+
+(* right fold *)
+
+let rec right_fold f lst acc =
+match lst with
+[]->acc
+|h::t-> f h (right_fold f t acc)
+;;
+
+right_fold (-) [1;2;3] 20;;
+ returns  int = -18
+
+(*   1 - ( 2- (3-20)) = -18   *)
+
+
+
 let add x y = x+y;;
 fold add 0 [1;2;3];;
 
