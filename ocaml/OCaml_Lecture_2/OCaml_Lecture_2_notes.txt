@@ -1,0 +1,476 @@
+(*
+CMSC330 Organiztions of Programming Languages
+ Fall 2016
+ Anwar Mamat
+
+*)
+
+Topics
+
+Tuples
+
+(e1,.....en)
+
+Tuples can be heterogeneous
+(1,3.5,"hello)
+
+
+let plusthree (x,y,x) = x+y+z
+
+let sum (a,b) = a+b
+
+let addone (x,y,z) = (x+1,y+1,z+1)
+
+
+let f l = match l with x::(_::y) -> x+y
+
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+[]
+
+
+f [1;2;3;4];;
+- : int * int list = (1, [3; 4])
+
+
+Tuple List
+
+[(1,1);(2,3);(1,5)]
+[(1,"alice");(2,"bob")]
+
+
+
+
+
+(* Pattern matching  
+
+match e with
+|p1->e1
+|p2->e2
+|p3->e3
+
+pattern matching will detect:
+	missed cases
+	unused case
+
+
+wild card for catch all, not good.
+*)
+
+
+
+(*    Polymorphic types  *)
+
+Some functions work for any data type.
+(* Some polymorphic functions *)
+let tl (_::t) = t
+
+let swap (x,y) = (y,x)
+
+let tls(_::xs, _::ys) = (xs, ys)
+
+let eq(x,y) = x = y     (* how do you parse this? *)
+
+
+
+
+(*  Lists and recursion  *)
+
+(* get a head of a list *)
+
+let hd l =
+match l with 
+[]->0.0
+|h::t-> float_of_int h
+;;
+
+
+(* get the last element of a list  *)
+
+let rec last l=
+match l with 
+[]->[]
+|[x]->[x]
+|_::t->last t
+;;
+
+Or 
+
+let rec last l=
+match l with 
+[]->None
+|[x]->Some x
+|_::t->last t
+;;
+
+
+(* calculate the length of a list *)
+
+
+let rec length lst =
+	match lst with
+	|[]->0
+	|_::t->1+length t
+;;
+
+
+(* calculate the sum of a int list *)
+
+let rec sum lst=
+	match lst with 
+	|[]->0
+	|h::t->h + sum t
+;;
+
+(* check if x is member of a list  *)
+
+
+let rec member lst x=
+	match lst with
+	|[]->false
+	|h::t->if h = x then true else member t x
+;;
+
+(* append list b to list a   *)
+
+
+
+let rec append a b=
+	match a with
+	|[]->b
+	|h::t-> h::append t b
+;;
+
+(* insertion sort *)
+
+let rec insert x l=
+	match l with 
+		|[]->[x]
+		|h::t->if x < h then x::h::t 
+				else h::insert x t
+;;
+
+let rec sort l = 
+	match l with 
+	[]->[]
+	|[x]->[x]
+	|h::t->insert h (sort t)
+;;
+
+
+(* factorial *)
+
+
+let rec f n=
+	if n =0 then 1 else n * (f (n-1))
+;;
+
+
+Anonymous functions
+
+(fun x->x*2) 10        returns 20
+
+(* bind anonymous functions to a variable *)
+let add = (fun x->x+1)
+
+(*   Higher order functions  *)
+
+(* What do these functions have in common? *)
+
+let rec neg x =
+  match x with
+      [] -> []
+    | h::t -> (-h)::(neg t)
+;;
+
+let rec add1 x =
+  match x with
+      [] -> []
+    | h::t -> (h+1)::(add1 t)
+;;
+
+(* They both create a new list whose elements are a 
+   function of the corresponding elements in the old list. 
+   We can write this pattern as its own function, map. *)
+
+let rec map f x = (* equivalent to List.map *)
+  match x with
+      [] -> []
+    | h::t -> (f h)::(map f t)
+;;
+
+let neg' x = (* the same as neg *)
+  let negate y = -y in
+  map negate x
+;;
+
+let add1' x = (* the same as add1 *)
+  let addone y = y + 1 in
+  map addone x;;
+
+neg [1;2;3] = neg' [1;2;3];;
+add1 [1;2;3] = add1' [1;2;3];;
+
+
+
+let plus3 x = x+3;;
+let twice f x = f (f x);;
+let t f x = f (f (f x));;
+
+
+add x y = x+y
+((add x) y )
+let add x y = x+y
+let add = (fun x->(fun y->x+y))
+
+(*   map  *)
+
+let rec map f l=match l with
+[]->[]
+|h::t->f h::map f t
+;;
+
+
+
+
+
+
+
+let double x = x*2;;
+let halve x = x /2;;
+
+let lst = [10;20;30;40];;
+
+map double lst    (*  returns [20;40;60;80] *)
+map halve lst 	(*  returns [5;10;15;20] *)
+
+
+let cons x ls = x::ls;;
+map (cons 0) [[1;2]; [3;4]];;
+(* returns [[0; 1; 2]; [0; 3; 4]]  *)
+
+
+
+
+
+(*   fold *)
+
+let rec fold f a l =
+
+	match l with
+	[]->a
+	|h::t->fold f (f a h) t
+;;
+
+let add x y = x+y;;
+fold add 0 [1;2;3];;
+
+
+(* fold and map are fundamental; many functions can be built using them *)
+
+
+let reverse ls = 
+    let prepend a x = x :: a in
+    fold prepend [] ls;;
+
+reverse [1;2;3;4];;
+
+
+
+
+(* What do these functions have in common? They look similar,
+   but there are small differences. *)
+let rec sum x =
+  match x with
+      [] -> 0
+    | h::t -> h+sum t
+;;
+
+let rec length x =
+  match x with
+      [] -> 0
+    | _::t -> 1+length t
+;;
+
+(* We can "abstract out" the small differences and create a 
+   function that takes them as arguments. Here, f is a function
+   that does the main work, and a is the "accumulator" *)
+
+let rec fold f x a =  (* Equivalent to List.fold_right *)
+  match x with
+      [] -> a
+    | h::t ->
+      let a' = fold f t a in
+      f h a';;
+
+let sum' x = (* computes the same answer as sum *)
+  let plus x y = x + y in
+  fold plus x 0
+;;
+
+let length' x = (* computes the same answer as length *)
+  let add1 _ x = 1+x in
+  fold add1 x 0
+;;
+
+length' [1;2;3] = length [1;2;3];;
+sum' [1;2;3] = sum [1;2;3];;
+
+
+
+
+
+
+(* Fold examples  *)
+
+(* calculate the average grade *)
+
+let grades = [80;90;70;60];;
+
+let rec fold f l acc =
+	match l with
+		[]->acc
+		|h::t-> f h (fold f t acc)
+;;
+
+let avg l =
+	let sum = fold (fun x y->x+y) l 0
+	in let rec length l =
+		match l with 
+		|[]->0
+		|h::t->1+length t	
+	in (sum / (length l))
+;;	
+		
+let v = avg grades;;
+print_string("Average grade:");;
+print_int v;;
+print_string("\n");;
+
+
+
+
+
+(*  apply a list of functions to a list of lists *)
+
+For example:
+f [1;2;3;4;5] [(fun x -> x); (fun x -> x * x); (fun x -> x * x * x)] =
+
+[[1; 8; 27; 64; 125]; [1; 4; 9; 16; 25]; [1; 2; 3; 4; 5]]
+OR
+[[1; 2; 3; 4; 5]; [1; 4; 9; 16; 25];[1; 8; 27; 64; 125]]
+
+
+
+(* Apply list of functions to a list *)
+
+let list = [1;2;3;4;5;6];;
+let double x = 2 * x;;
+let halve x = x/2;;
+let self x = x;;
+let square x = x * x;;
+let f x = string_of_int x;;
+let flist=[double; halve;self;square];;
+
+let rec map f l =
+	match l with
+	[]->[]
+	|h::t->f h::map f t
+;;
+let rec map_map fl li =
+	match fl with
+		[]->[]
+		|h::t->map h li
+		:: map_map t li
+	;;
+	
+map_map flist  list;;	
+
+
+(* mapmap can be implemented as *)
+
+(fun a f lst->(List.map f lst)::a) [] (fun x->x+1) [10;20;30];;
+
+Now we fold it:
+
+let m3 flist list =  fold  (fun a f->(map f list)::a) [] flist;;  (* order may not same *)
+		
+
+
+(* Adding a first items in each list in a int list list  *)
+List.fold_left (fun x l->(List.hd l) + x) 0 [[1;2;3];[4;5;6];[7;8;9]];;
+- : int = 12
+
+
+(* Collect all even numbers in the list *)
+List.fold_left (fun x y->if (y mod 2) = 0 then y::x else x) [] [1;2;3;4;5;6];;
+
+- : int list = [6; 4; 2]
+
+
+
+
+( * extra *)
+
+
+let rec fact x =
+  if x = 0 then 1
+  else x * fact (x-1)
+;;
+
+let fact_wrong x = 1
+let fact_wrong x =
+  if x = 0 then 1
+  else x * fact_wrong (x-1) (* NOT recursive, because no rec *)
+;;
+
+fact 5;;
+fact_wrong 5;; (* what will the answer be? *)
+
+let fact_tail x =
+  let rec helper y a =
+    if y = 0 then a
+    else helper (y-1) (y*a) in
+  helper x 1
+;;
+
+fact_tail 200000000;; (* output = 0 -- integer overflow! *)
+fact 2000000000;; (* exception thrown -- stack overflow! *) 
+
+
+
+(* what's the type of this function? *)
+let add_n n =
+  let f x = 
+    print_string "this is my message\n";
+    x+n in
+  f 
+
+(* What does this do? What's its type? *)
+let add5 x = add_n 5 x
+
+(* value? *)
+let x = add5 6;;
+
+print_string "outer call: ";
+print_int x;;
+print_string "\n";;
+
+
+
+
+
+ 
+
+
+	
+	
+
+
+
+
+
+
+
+
+
