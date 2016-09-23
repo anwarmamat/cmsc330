@@ -1,0 +1,224 @@
+(*
+CMSC330 Organiztions of Programming Languages
+ Fall 2016
+ Anwar Mamat
+*)
+
+(* review *) 
+(* map *)
+
+let rec map f x = 
+  match x with
+      [] -> []
+    | h::t -> (f h)::(map f t)
+;;
+
+type:
+('a -> 'b) -> 'a list -> 'b list = <fun>
+
+(*  filter *)
+
+let rec filter f  = function
+	|[]->[]
+	|h::t->if f h then x::(filter f t)
+			else filter f  t
+
+filter : ('a -> bool) -> 'a list -> 'a list
+(*List.filter *)
+
+
+
+Mystery function:
+
+let mystery  = List.map (fun x -> x + 1)
+(* what does mystery do? where is the list *)
+
+
+Quiz:
+
+What is the value of lst?
+
+let is_even x = (x mod 2 = 0)
+let lst = map  is_even [1;2;3;4;5]
+
+A.[1;2;3;4;5]
+B.[2;4]
+C.[false; true; false;true;false]
+D.false
+
+
+Quiz:
+
+What is the value of lst?
+
+let is_even x = (x mod 2 = 0)
+let lst = filter  is_even [1;2;3;4;5]
+A.[1;2;3;4;5]
+B.[2;4]
+C.[false; true; false;true;false]
+D.false
+
+
+
+(*   fold_left  *)
+
+let rec fold f a l =
+	match l with
+	[]->a
+	|h::t->fold f (f a h) t
+;;
+
+type:
+ ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
+
+
+fold (fun x y->x+y) 0 [1;2;3;4;5];;
+(* returns 1+2+3+4+5= 15  *)
+
+
+let add x y = x+y;;
+fold add 0 [1;2;3;4;5];;
+(* returns 1+2+3+4+5= 15  *)
+
+
+(* fold_right *)
+
+let rec right_fold f lst acc =
+	match lst with
+	  []->acc
+	  |h::t-> f h (right_fold f t acc)
+;;
+
+Type:
+ ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+ 
+ 
+(*  fold_left vs. fold_right 
+
+folding  [1;2;3]  with 0 and  (+)
+
+fold_left: left to right:   ((0+1)+2)+3 
+
+fold_right: right to left:  1+(2+(3+0)) 
+ 
+ *)
+
+(* tail recursion: fact2 is tail-recursive, fact1 is not *)
+
+let rec fact1 n = if n=0 then 1 else n * fact1(n-1)
+
+(*
+   fact1 4 
+     => 4 * fact1(3)
+     => 4 * 3 * fact1(2)
+     => 4 * 3 * 2 * fact1(1)
+     => 4 * 3 * 2 * 1 * fact1(0)
+     => 4 * 3 * 2 * 1 * 1
+     => ..
+     => 24
+*)
+
+let fact2 n =
+    	let rec aux(n,acc) = if n=0 then acc else aux(n-1,acc*n) in
+	aux(n,1)
+;;   
+
+(*
+   fact2 4
+     => aux(4,1)
+     => aux(3,4)
+     => aux(2,12)
+     => aux(1,24)
+     => aux(0,24)
+     => 24
+*)
+
+
+fact1 1000000 (* stackoverflow *)
+fact2 1000000  (* big number, but no stack overflow *)
+
+
+(* fold_left is tail recursive *)
+
+let my_range s t =
+	let rec aux s t lst =
+		if s>t then lst
+		else aux s (t-1) (t::lst)
+	in aux s t []
+;;
+
+
+let (--) = my_range;;
+type : int -> int -> int list 
+# 1--10;;
+- : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+
+(* fold_left is tail recursive *)
+List.fold_left (+) 0 (1--1000000);;
+- : int = 500000500000
+
+(* fold_right is not tail recusrive *)
+# List.fold_right (+) (1--1000000) 0;;
+Stack overflow during evaluation (looping recursion?).
+
+
+
+(* now implement filter with fold *) 
+ let filter f l =
+  List.fold_right (fun x a -> if f x then x :: a else a) l []
+
+
+(* reverse a list with fold *)
+let rev lst= fold_left (fun acc  x ->x::acc) [] lst
+
+(* length of a list *)
+let length  lst = fold_left (fun a _-> a + 1) 0 lst
+
+
+
+
+
+(* static vs dynamic scoping *)
+
+let x = 10 ;;
+let f y = x + y;;
+let x = 5 ;;
+let y = 7 ;;
+let z = f (x + y) ;;
+
+static: z= 22 
+dynamic: z  = 17
+
+
+(* another example *)
+
+let x = 10 in  
+let f = fun y -> x in 
+let x = 20 in 
+  f 0 
+
+
+ 10 or 20?
+ 
+ static: 10
+ dynamic: 20
+
+
+
+(* another example *)
+
+(* second example *)
+let  x = 1;;
+let f y =
+    let x = y+1 in
+        fun z -> x + y  + z
+;;
+
+let x = 3
+let g = f 4
+let y = 5
+let z = g 6
+
+
+(* Closures *)
+read the slides and examples 
