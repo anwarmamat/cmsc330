@@ -9,3 +9,8 @@ Ruby 3 Regexp
 Ruby 4 Mixins, Procs, Code blocks
 
 OCaml 1 Basics
+
+OCaml 2 Higher Order Funtions
+
+OCaml 3 Closures
+
