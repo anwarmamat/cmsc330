@@ -37,12 +37,12 @@ let evens l = ();;
 let sum_cube_odd l n = ();;
 
 (* Write a function evens2 which only selects even numbers from a list *)
-(* i.e. [1;2;3;4] => [2;4]*)
+(* i.e. [1;2;3;4] => [2;4] or [4;2]*)
 
 let evens2 l = ();;
 
 (* Write a function which uses fold with an empty list as an accumulator
-   to write your own definition of map *)
+   to write your own definition of map (order doesn't matter) *)
 
 let map2 f l = ();;
 
