@@ -6,9 +6,9 @@ CMSC330 Organiztions of Programming Languages
 
 module type FRACTION =
   sig
-    type fraction (*= Frac of int * int*)
+    type fraction (* hide the type *)
     exception BadFrac
-    (*val gcd : int * int -> int*)
+    (*val gcd : int * int -> int*) (* gcd is not visible outside the module *)
     val reduce : fraction -> fraction
     val make_frac : int * int -> fraction
     val add : fraction * fraction -> fraction
@@ -29,7 +29,7 @@ struct
                            Frac((x/d), (y/d)) 
 
 
-(* when making a frac, we ban zero denominators *)
+(* denominator cannot be 0 *)
 let make_frac (x,y) =
      if y = 0 then raise BadFrac
      else reduce(Frac(x,y))
