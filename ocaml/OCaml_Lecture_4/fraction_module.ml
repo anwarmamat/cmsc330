@@ -1,0 +1,41 @@
+(*
+CMSC330 Organiztions of Programming Languages
+ Fall 2016
+ Anwar Mamat
+*)
+module Fraction =
+struct
+
+  type fraction  = Frac of int*int
+  exception BadFrac
+
+
+  let rec gcd (x,y) =
+    (*let _ = print_int x; print_string "\t"; print_int y in *)
+    let (x,y) = if x>=y then (x,y) else (y,x) in
+    if y = 0 then x else gcd(y,x mod y)
+     
+  let reduce (Frac(x,y)) = let d = gcd(x,y) in
+                           Frac((x/d), (y/d)) 
+
+
+(* when making a frac, we ban zero denominators *)
+let make_frac (x,y) =
+     if y = 0 then raise BadFrac
+     else reduce(Frac(x,y))
+
+let add (r1,r2) = 
+       match (r1,r2) with
+	 | (Frac(a,b),Frac(c,d)) -> reduce (Frac(a*d + b*c, b*d))
+
+let toString (Frac(a,b)) = if b = 1 then string_of_int a
+                              else if a = 0 then "0"
+                              else (string_of_int a) ^ "/" ^ (string_of_int b)
+end;;
+
+
+let f1 = Fraction.make_frac(4,8);;
+let f2 = Fraction.make_frac(50,100);;
+print_endline (Fraction.toString (Fraction.add (f1,f2)));;
+ 
+    

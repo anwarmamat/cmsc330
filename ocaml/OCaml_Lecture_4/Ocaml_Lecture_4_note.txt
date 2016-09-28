@@ -1,0 +1,292 @@
+(*
+CMSC330 Organiztions of Programming Languages
+ Fall 2016
+ Anwar Mamat
+*)
+
+
+(* closure review *)
+
+let f x y = 
+	x+y;;
+
+
+
+let f2 x y = 
+	fun z -> z + x + y
+	;;
+	
+
+let g1 = f 10 20;;
+g1 : int = 30
+
+let g2 = f2 10 20;;
+g2 : int -> int = <fun>
+
+(* g2 is a function closure, which has code fun z->z+x+y and environment (x=10,y=20) *)
+
+
+g2 30;;
+
+- : int = 60
+
+
+(* mutually recursive functions  *)
+
+let rec even n = if n = 0 then true else odd(n-1)
+and 
+odd n  = if n = 0 then false else even(n-1)
+
+
+    
+
+(* data type *)
+
+(* option *)
+
+type 'a option = 
+    Some of 'a
+  | None
+
+
+(* get the head of a list *)
+let hd lst = 
+	match lst with
+	|[]->None
+	|h::_->Some h
+;;
+
+
+(* shape *)
+
+type shape =
+    Rect of float * float (* wid*len *)
+  | Circle of float       (* radius  *)
+
+let area x = match x with
+  Rect (w, l) -> w *. l
+| Circle r -> r  *. r *. 3.14
+
+let unit_circle = Circle 1.0
+;;
+
+area unit_circle;;
+
+
+
+(* polymorphic list *)
+type gen = Int of int |Str of string;;
+
+let l = [Int 10; Str "alice"; Int 30; Str "bob"];;
+
+(* print the generic list *)
+let rec print_gen_list l = 
+	match l with 
+		[]->print_string ""
+		|h::t->
+			(match h with 
+				|Int x->print_int x;print_string "\n"
+				|Str s->print_string s;print_string "\n"
+			);
+			print_gen_list t	
+;;
+
+print_gen_list l;;
+
+
+(*  We can also use map to print the list *)
+let print_gen x = 
+	match x with				
+		|Int i->print_int i;print_string "\n"
+		|Str s->print_string s;print_string "\n"
+;;
+
+List.map print_gen l;;
+
+
+
+(* expression evaluation  *)	
+
+
+let rec power x y=
+	if(y <= 1 ) then x else x * power x (y-1)
+	;;
+	
+type expr = 
+	Num of int
+	| Add of expr * expr
+	| Sub of expr * expr
+	| Mul of expr * expr
+	|Div of expr * expr
+	|Power of expr * expr
+;;
+
+let rec eval e =
+	match e with
+		Num x -> x
+		| Add (e ,e') -> eval e + eval e'
+		| Sub (e, e') -> eval e - eval e'
+		|Mul (e ,e') -> eval e * eval e'
+		|Div (e ,e') -> eval e / eval e'
+		|Power (e ,e') -> power (eval e) (eval e')
+;;
+
+eval (Add (Num 5,  Power(Mul (Num 4, Num 3), Num 2)))
+;;
+(* returns 5+(4*3)^2 = 149 *)
+			
+
+
+(* Polymorphic data types: list  *)
+
+type 'a my_list =
+    Nil
+  | Cons of 'a * 'a my_list;;
+
+(* length of the list *)
+let rec len = function
+    Nil -> 0
+  | Cons (_, t) -> 1 + (len t);;
+
+
+len (Cons (10, Cons (20, Cons (30, Nil))));;
+
+(* creat my_list from a list *)
+let rec my_list_of_list (ls : 'a list) : 'a my_list = 
+    match ls with
+    [] -> Nil
+  | h::t -> Cons(h, (my_list_of_list t));;
+
+let ol = my_list_of_list [1;2;3;4];;
+
+(* sum of a my_list *)
+let rec list_sum l = 
+	match l with 
+	|Nil->0	(* we had None ->0 in class. That does not work. *)
+	|Cons(y,t)->y + (list_sum t);;
+	
+
+let m = list_sum ol;;
+
+let c = Cons(10,Cons(20,Cons(30,Nil)));;
+print_int (list_sum c);;
+
+
+(* module *)
+
+module type FOO =
+  sig
+    val add : int -> int -> int
+   (* val mult : int -> int -> int*)
+  end;;
+  
+  
+  
+module Foo : FOO =
+  struct
+    let add x y = x + y
+    let mult x y = x * y
+  end;;
+Foo.add 3 4;;    (* OK *)
+Foo.mult 3 4;;   (* not accessible *)
+
+
+
+
+module type SHAPES =
+  sig
+    type shape  (*hides the representation *)
+    val area : shape -> float
+    val make_circle : float -> shape
+    val make_rect : float -> float -> shape
+    (* hides the unit_circle definition *)
+end;;
+
+module Shapes : SHAPES = 
+  struct
+    type shape =
+       Rect of float * float (* wid*len *)
+     | Circle of float       (* radius  *)
+
+    let area = function
+       Rect (w, l) -> w *. l
+     | Circle r -> r  *. r *. 3.14
+
+    let unit_circle = Circle 1.0
+    let make_circle rad = Circle(rad)
+    let make_rect wid len = Rect(wid, len)
+  end;;
+
+(* Shapes.unit_circle;; (* fails *) *)
+(* Shapes.area (Shapes.Rect (3.0, 4.0));; (* fails *) *)
+Shapes.area (Shapes.make_rect 3.0 4.0);;
+
+
+
+(* Fraction module example. See the fraction_module and fraction_module_sig files *)
+
+(* ref *)
+
+let new_counter () = 
+  let next = let count = ref 0 in
+	     function () ->
+	       let curr = !count in
+	       incr count;
+	       curr
+  in
+  next
+
+let c1 = new_counter ();;
+let c2 = new_counter ();;
+let x = c1 ();; (* x = 0 *)
+let y = c1 ();; (* y = 1 *)
+let z = c2 ();; (* z = 0 *)
+
+
+
+(* exception *)
+
+exception Error of int
+
+(*let div x y = if y=0 then raise (Error 99) else x / y;; *)
+let div x y =  x / y;;
+	
+let my_fun() =
+	let s = try
+			div (int_of_string Sys.argv.(1)) (int_of_string Sys.argv.(2))
+			with 
+			|Error x->x
+			|Invalid_argument("index out of bounds") -> 200 (* "index out of bounds" *)
+			|Division_by_zero ->100
+			(*in print_string (s^"\n");;*)
+			in print_int s; print_string "\n";;
+
+
+my_fun();;
+
+
+
+
+let f n = try 100 / n with Division_by_zero -> 69;;
+
+
+exception EmptyList
+let hd l = 
+match l with 
+[]->raise EmptyList
+|h::_-> h
+;;
+
+
+let get_head l=
+	try hd l with EmptyList->99
+;;
+	
+let f = get_head [1;2;3];; (* returns 1*)
+let g = get_head [];; (* returns 99*)
+
+print_int f;;
+print_newline();;
+
+print_int g;;
+print_newline();;
