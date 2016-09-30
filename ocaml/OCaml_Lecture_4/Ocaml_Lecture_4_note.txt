@@ -290,3 +290,28 @@ print_newline();;
 
 print_int g;;
 print_newline();;
+
+
+(*  imperative OCaml *)
+
+let t = ref 0;;
+
+t := 100;;  (* assgin *)
+let x = !t;; (* read t *)
+
+t := !t +1;;
+
+
+
+let next =
+  let _= print_string "creating the closure\n" in
+  let count = ref 0 in
+  fun x->match x with
+           ()->
+           let _= print_string "counting\n" in
+           let t = !count in  count:= !count +1; t
+;;
+
+
+(* binding a variable to an anounymous function *)
+let a = let y = 10 in fun x ->x*y;;
