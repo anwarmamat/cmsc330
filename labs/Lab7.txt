@@ -16,7 +16,7 @@ S -> a|b|S&S|S%S|e
  N -> 0 | 1
 
 (a) 1--0+1+1*
-(b) 1-0*1+1-0+-
+(b) 1-0*1+-0+-
 (c) 1-0+1-+*1-
 (d) 1-1-*0-+-
 
@@ -77,9 +77,10 @@ in the grammar for conditional expressions by introducing nonterminals
 for conditionals with and without else branches. 
 Which statement is true of this grammar?
 
- S1 -> if B S1 | S2 | skip
- S2 -> if B S2 else S1 | skip
- S3 -> true | false
+S -> S1 | S2
+S1 -> if B S1 else S1 | skip
+S2 -> if B S | if B S1 else S2
+B -> true | false
 
 (a) There is no derivation of 'if true skip else if true skip' in the grammar
 (b) The grammar is unambiguous
