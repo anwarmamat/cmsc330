@@ -3,8 +3,9 @@ Given the following grammar, construct the first set for each symbol:
 
 P -> ES
 ES -> E; ES | E;
-E -> T id | id := v | epsilon
+E -> T D | D := v | epsilon
 T -> int | bool
+D -> x | y
 
 Example of a program:
 int x;
@@ -20,6 +21,7 @@ First(=):
 First(v):
 First(E):
 First(ES):
+First(D):
 First(T):
 First(P):
 
