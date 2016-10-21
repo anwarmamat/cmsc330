@@ -3,7 +3,7 @@ Given the following grammar, construct the first set for each symbol:
 
 P -> ES
 ES -> E; ES
-E -> t id | id := v | epsilon
+E -> type id | id := v | epsilon
 
 Example of a program:
 int x;
