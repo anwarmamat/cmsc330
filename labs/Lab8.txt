@@ -63,15 +63,15 @@ n < n -> n < n  // Remember, left of the -> is lexical tokens, right is mathemat
 -------
 n -> n
 
-   n1 < n2 -> true e1 -> v1
+   n1 < n2 -> true n1 -> v1
 ---------------------------------
-if n1 < n2 then e1 else e2 -> v1 
+if n1 < n2 then n1 else n2 -> v1 
 
-   n1 < n2 -> false e2 -> v2
+   n1 < n2 -> false n2 -> v2
 ---------------------------------
-if n1 < n2 then e1 else e2 -> v2
+if n1 < n2 then n1 else n2 -> v2
 
 Deduce the following expressions by explicitly writing out the natural deductions:
 
-if 2 < 4 then 3 else 5
-if 4 < 2 then 3 else 5
+if 2 < 4 then 3 else 5 -> 3
+if 4 < 2 then 3 else 5 -> 5
