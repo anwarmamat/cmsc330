@@ -1,0 +1,69 @@
+Exercise 1 - First Sets
+Given the following grammar, construct the first set for each symbol:
+
+P -> ES
+ES -> E; ES
+E -> t id | id := v | epsilon
+
+Example of a program:
+int x;
+bool y;
+x := 4;
+y := false;
+
+First(t):
+First(id):
+First(:):
+First(=):
+First(v):
+First(E):
+First(ES):
+First(P):
+
+S -> aA
+A -> BCB
+B -> b
+C -> cC | epsilon
+
+First(S):
+First(A):
+First(B):
+First(C):
+
+Exercise 2 - Parsing
+Given the following grammar, fill in the following skeleton code for a recursive descent parser:
+
+S -> baS | pSq | q
+
+parse_P
+   if (lookahead == ) {
+   
+   }
+   Else if (lookahead == ) {
+   
+   }
+   Else if (lookahead == ) {
+   
+   }
+   Else error();
+}
+
+Exercise 3 - Operational Semantics
+
+Given the rules:
+
+n < n -> n < n  // Remember, left of the -> is lexical tokens, right is mathematical operations.
+                // That is to say, we evaluate < when it appears in the language :)
+
+   n1 < n2 -> true e1 -> v1
+---------------------------------
+if n1 < n2 then e1 else e2 -> v1 
+
+   n1 < n2 -> true e1 -> v1
+---------------------------------
+if n1 < n2 then e1 else e2 -> v1 
+
+Deduce the following expressions by explicitly writing out the natural deductions:
+
+if 2 < 4 then 3 else 5
+if 4 < 2 then 3 else 5
