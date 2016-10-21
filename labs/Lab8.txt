@@ -12,13 +12,15 @@ bool y;
 x := 4;
 y := false
 
-First(t):
+First(int):
+First(bool):
 First(id):
 First(:):
 First(=):
 First(v):
 First(E):
 First(ES):
+First(T):
 First(P):
 
 S -> aA
