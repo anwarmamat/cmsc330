@@ -57,14 +57,17 @@ Exercise 3 - Operational Semantics
 
 Given the rules:
 
+---------------
 n < n -> n < n  // Remember, left of the -> is lexical tokens, right is mathematical operations.
                 // That is to say, we evaluate < when it appears in the language :)
+-------
+n -> n
 
    n1 < n2 -> true e1 -> v1
 ---------------------------------
 if n1 < n2 then e1 else e2 -> v1 
 
-   n1 < n2 -> true e1 -> v1
+   n1 < n2 -> false e1 -> v1
 ---------------------------------
 if n1 < n2 then e1 else e2 -> v1 
 
