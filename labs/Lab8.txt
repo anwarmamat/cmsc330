@@ -9,7 +9,7 @@ Example of a program:
 int x;
 bool y;
 x := 4;
-y := false;
+y := false
 
 First(t):
 First(id):
