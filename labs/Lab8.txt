@@ -67,9 +67,9 @@ n -> n
 ---------------------------------
 if n1 < n2 then e1 else e2 -> v1 
 
-   n1 < n2 -> false e1 -> v1
+   n1 < n2 -> false e2 -> v2
 ---------------------------------
-if n1 < n2 then e1 else e2 -> v1 
+if n1 < n2 then e1 else e2 -> v2
 
 Deduce the following expressions by explicitly writing out the natural deductions:
 
