@@ -2,8 +2,9 @@ Exercise 1 - First Sets
 Given the following grammar, construct the first set for each symbol:
 
 P -> ES
-ES -> E; ES
-E -> type id | id := v | epsilon
+ES -> E; ES | E;
+E -> T id | id := v | epsilon
+T -> int | bool
 
 Example of a program:
 int x;
