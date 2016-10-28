@@ -1,0 +1,54 @@
+Exercise 1: Free and Bound variables
+Given the following Lambda calculus expressions, identify the free and bound variables.
+
+(\x. x y) a b
+
+Free:
+Bound:
+
+(\x. x y) x y
+
+Free:
+Bound:
+
+(\x. (\y.x) y) a b
+
+Free:
+Bound:
+
+(\x.\y.\z. a x y)
+
+Free:
+Bound:
+
+Exercise 2: Normalizing Lambda Calculus Expressions
+Reduce the following expressions to their normal forms.
+
+1.
+(\x.\y.\z x y y) a b c
+
+2.
+(\x.\y.\z x y y) x y z
+
+3.
+(\x. x x) (\x. x x)
+
+4.
+x y (\x.\y.\z. a b x) x y
+
+5.
+(\x.\y. x (\z. x z) y)
+
+6.
+(\x.\y. x (\z. x z) y) a b
+
+Exercise 3: Church Encoding
+
+0 - (\f.\y.y)
+1 - (\f.\y.f y)
+
+successor - (\z.\f.\y.f (z f y))
+
+Reduce successor of 0 to arrive at the encoding for numeral 1.
+
+(\z.\f.\y.f (z f y)) (\f.\y.y)
