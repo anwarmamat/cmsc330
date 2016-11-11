@@ -16,8 +16,8 @@
 %  7) Daniel1971
 %  8) @=!;
 
-% Exercise 2: Complex Terms
-% Complex terms are made up of simple terms. One of the simplest type of complex term is the 'fact'
+% Exercise 2: Predicates
+% Predicates are made up of simple terms. One of the simplest type of predicate is the 'fact'
 
 dog(rufus).
 dog(hambone).
@@ -26,11 +26,12 @@ cat(popsicle).
 
 % By combining two atoms with paranthesis, I've created 2 classes of facts, dogs and cats, and declared
 % some atoms which are the names of various dogs and cats.
-% Here is a complex term, which  
+% Here is another type of predicate, which defines how dogs and cats feel about each other.
 
-hates(X, Y):- dog(X), cat(Y); dog(Y), cat(X).
+hates(X, Y):- dog(X), cat(Y).
+hates(X, Y):- dog(Y), cat(X).
 
-% Given this very simple database, finish the rule at the end which tells us who would win in a fight
+% Given this very simple database, finish this rule which tells us who would win in a fight
 
 wins_fight(X, Y):- hates(X, Y) /*Your choice goes here*/.
 
