@@ -14,3 +14,13 @@ OCaml 2 Higher Order Funtions
 
 OCaml 3 Closures
 
+OCaml 4 Modules, Data types
+
+Polymorphism
+
+Prolog 1 Basics
+
+Prolog 2  Lists
+       
+Prolog 3  Cut
+
