@@ -12,6 +12,7 @@
 #use "parser.ml";;
 #use "lambda_eval.ml";;    
 
+let clear () = Sys.command "clear";;
 (*
 
 To compile and generate an executable:
@@ -104,7 +105,7 @@ let fact1 =
 let e  =App(App(yfix, fact1), mythree)
 ;;
 
-(* print the factorial 3 as int *)(
+(* print the factorial 3 as int *)
 let x = to_int (reduce_until_normal e)   (*  6 *)
 ;;
 
