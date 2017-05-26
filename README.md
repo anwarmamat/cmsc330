@@ -1,4 +1,4 @@
-# cmsc330
+# cmsc330 Spring 2016 
 
 Ruby 1 Ruby_lecture_1_classes_and_objects.txt
 
