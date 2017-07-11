@@ -1,5 +1,5 @@
 (*
-CMSC330 Organiztions of Programming Languages
+CMSC330 Organizations of Programming Languages
  Fall 2016
  Anwar Mamat
 
