@@ -64,26 +64,33 @@ $ end
 #pattern = "^([^aouei]*[aouei][^aouei]*[aouei][^aouei]*)*$"  #even number of wovels
 #| (^[^b]+(b+[^b])*)      # starts with not-b, 0 or more times of any number of b followed by one nont-b
 #pattern = "^(b([^b]+b*)*[^b])$"
-
+#pattern = "^[^ab]*ab[^ab]*ab[^ab]*$" # 2 ab's
 
 # re = Regexp.new("^" + "a" )
 
 # Test the pattersn
 # Lists all words from "war and peace" that matched the pattern
 
-
-pattern = "^(b[a-z]*[^b])$|^([^b][a-z]*b)$"  #starts with b or ends with b, but not both
+pattern = "^b[a-z]*s$"    # starts with b and ends with s
 file="war_peace.txt"
 fp = open(file)
-cnt = 0
-while line =  fp.gets do
-    words = line.split(/[<>\/,?!.\s'\-()":;*]/)  #split each line into a words array
-    words.each{|word| 
-      word.downcase!
-      if(word.match(/#{pattern}/))
-        print word,"\t"
-        cnt += 1
-      end
-        exit if cnt >  10
+matched_list={}
+
+n = 20    #number of words before stop matching
+
+while (line =  fp.gets) && matched_list.size < n do
+  words = line.split(/[<>\/,?!.\s'\-()":;*]/)  #split each line into a words array
+  words.each{|word| 
+    word = word.downcase 
+    if(word.match(/#{pattern}/) )
+      matched_list[word]=true
+      break if matched_list.size >  n
+    end
+    
     }
 end
+
+matched_list.keys.each{|w|
+  puts w
+}
+puts "\nEnd of List"
