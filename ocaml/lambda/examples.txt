@@ -1,0 +1,47 @@
+(*
+((\x.\y x y) a) b
+*)
+
+let t = parse "((Lx.Ly. x y) a) b";;
+  val t : exp =
+  App (App (Lam ("x", Lam ("y", App (Var "x", Var "y"))), Var "a"), Var "b")
+
+
+print_lambda t;;
+  (\x. \y. x y) a b- : unit = ()
+
+print_lambda (reduce t);;
+  (\y. a y) b- : unit = ()
+
+print_lambda ( reduce (reduce t));;
+  a b- : unit = ()
+
+
+  print_lambda (reduce_multi t);;
+  a b- : unit = ()
+
+
+
+let e  =App(App(yfix, fact1), (App(mysucc, mythree)))
+to_int (reduce_multi e);;
+- : int = 24
+
+
+let e  =App(App(yfix, fact1), myfive);;
+to_int (reduce_multi e);;
+Reduced 1 steps
+Reduced 2 steps
+....
+Reduced 36133 steps
+Reduced 36134 steps
+
+
+
+let e  =App(App(yfix, fact1), App(mysucc,myfive));;
+to_int (reduce_multi e);;
+
+
+Reduced 283660 steps
+Reduced 283661 steps
+
+- : int = 720
