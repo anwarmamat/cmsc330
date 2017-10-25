@@ -81,20 +81,6 @@ let rec reduce e =
 
 
 
-let reduce5  x = reduce (reduce (reduce (reduce (reduce  x))))
-
-let reduce10 x = reduce5 (reduce5 x)
-
-let reduce20 x = reduce10 (reduce10 x)
-
-let reduce50 x = reduce10(reduce20 (reduce20 x))
-
-let reduce100 x= reduce50 (reduce50 x)
-              
-let reduce200 x= reduce100(reduce100 x)
-
-
-
 (*
 (* TESTS *)
 let m2red = reduce m2
@@ -141,15 +127,26 @@ let rec lambda_exp_2_str e =
 
 
 
-let rec reduce_until_normal x  =
-	let old1 = print_lambda x in 
-	let t1 = reduce200(reduce200(reduce200 x)) in 
-	let t2 = reduce200(reduce200(reduce200 t1)) in 
-	let new1 = print_lambda t2 in 
-	if old1 = new1 then t2 else (reduce_until_normal t2)  
-;;
+
         
-    
+let next =
+  let count = ref 0  in
+  function () ->
+    count := !count +1; !count
+;;
+
+let rec reduce_multi x  =
+  let old1 = x in
+  let new1 = reduce x  in
+  (*
+    print_string "Reduced ";
+    print_int (next ());
+    print_string " steps\n";
+  *)
+  if old1 = new1 then old1 else (reduce_multi new1)
+;;
+
+  
 
 (* TESTS *)
 (*

@@ -106,16 +106,27 @@ let e  =App(App(yfix, fact1), mythree)
 ;;
 
 (* print the factorial 3 as int *)
-let x = to_int (reduce_until_normal e)   (*  6 *)
+let x = to_int (reduce_multi e)   (*  6 *)
 ;;
-
+  print_string "fact(3) = ";;
+  print_int x;;
+    print_string "\n";;
 
 
 (* m = 2 + 3 *)
 let m =  (App(App(myplus,mytwo),mythree));;
-
+print_string "2+3=";;
+print_int(to_int (reduce_multi m));;
+print_string "\n";;
+    
 (* n = 2 * succ(n) = 2 * 6 = 12 *)
-let n = App(App(mymult, mytwo), App(mysucc,m))
+let n = App(App(mymult, mytwo), App(mysucc,m));;
+let s = reduce_multi n;;
+print_string "2*6=";;
+print_lambda s;;
+print_string " = " ;;
+print_int (to_int s);;
+print_string "\n";;
 
 (*
 let m = reduce20 m;;
