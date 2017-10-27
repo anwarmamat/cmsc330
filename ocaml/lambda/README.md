@@ -30,10 +30,10 @@ in OCaml toplevel
 
    val t : exp = App (Lam ("x", Lam ("y", App (Var "x", Var "y"))), Var "w")
 
-   # print_lambda t;;
+   #print_lambda t;;
 
    (\x. \y. x y) w- : unit = ()
 
-   # print_lambda (reduce t);;
+   #print_lambda (reduce t);;
 
    \y. w y- : unit = ()
