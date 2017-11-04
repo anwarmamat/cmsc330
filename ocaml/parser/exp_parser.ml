@@ -72,7 +72,7 @@ and parse_T () =
   match t with
     Tok_Mul ->
     match_tok Tok_Mul;
-    let a2 = parse_P () in
+    let a2 = parse_T () in
     Mul(a1,a2)
   | _ -> a1 		(* E -> T *)
 
