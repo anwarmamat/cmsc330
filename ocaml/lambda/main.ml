@@ -75,7 +75,8 @@ let myor = parse "La. Lb. Lx. Ly.  b x (a x y)";;
 let iszero  =parse "Ln. n (Lx. (Lx.Ly. y)) (Lx. Ly. x)"
 let mypred = parse "Ln. Lf. Lx. n (Lg.  Lh.  h (g f)) (Lu.x) (Lu. u)";;
 let myminus = parse "Lm. Ln. (n Ln. Lf. Lx. n (Lg.  Lh.  h (g f)) (Lu.x) (Lu. u)) m";;
-
+let mydiv = parse " (Ln.((Lf.(Lx.x x) (Lx.f (x x))) (Lc.Ln.Lm.Lf.Lx.(Ld.(Ln.n (Lx.(La.Lb.b)) (La.Lb.a)) d ((Lf.Lx.x) f x) (f (c d m f x))) ((Lm.Ln.n (Ln.Lf.Lx.n (Lg.Lh.h (g f)) (Lu.x) (Lu.u)) m) n m))) ((Ln.Lf.Lx. f (n f x)) n))";;
+  
 (*
    Y = \f.(\x. f (x x)) (\x. f (x x))
   fact = \f.\n. if n = 0 then 1 else n * (f (n -1))
@@ -126,7 +127,18 @@ print_string "2*6=";;
 print_lambda s;;
 print_string " = " ;;
 print_int (to_int s);;
+print_string "\n\n";;
+
+(*   succ(4) / 2  *)
+let e = App(App(mydiv,App(mysucc,mythree)),mytwo);;
+print_string "Division example:\n";;
+(*  - : int = 2  *)
+print_string "succ(3)/2=";;
+print_lambda (reduce_multi e);;
+print_string " = " ;;
+print_int (to_int (reduce_multi e));;
 print_string "\n";;
+
 
 (*
 let m = reduce20 m;;
