@@ -228,7 +228,7 @@ let eq(x,y) = x = y     (* how do you parse this? *)
 
 match 1+2 with
     3 -> true
-  | i -> false;;
+  | _ -> false;;
 
 
 let is_odd x =

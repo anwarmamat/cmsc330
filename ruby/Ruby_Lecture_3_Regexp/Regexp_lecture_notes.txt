@@ -62,7 +62,8 @@ $ end
 #pattern = ^ste(ve|phe|)n?$#steve, steven, or stephen
 #pattern = "^(..)*$"   #even length string
 #pattern = "^([^aouei]*[aouei][^aouei]*[aouei][^aouei]*)*$"  #even number of wovels
-#| (^[^b]+(b+[^b])*)      # starts with not-b, 0 or more times of any number of b followed by one nont-b
+#| (^[^b]+(b+[^b])*)      # starts with not-b, 0 or more times of any number of b followed 
+                         # by one nont-b
 #pattern = "^(b([^b]+b*)*[^b])$"
 #pattern = "^[^ab]*ab[^ab]*ab[^ab]*$" # 2 ab's
 
