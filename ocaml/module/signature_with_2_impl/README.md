@@ -1,6 +1,6 @@
 (*
 
-Inerface module Add and its two different implementaions
+Interface module Add and its two different implementations
 
 *)
 
