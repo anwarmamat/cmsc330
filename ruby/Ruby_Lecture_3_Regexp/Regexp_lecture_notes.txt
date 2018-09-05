@@ -53,7 +53,7 @@ $ end
 #pattern = "^a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*r*t*$" # all letters are in alphabetic order
 #pattern << "ruby"	#contains "ruby"
 #pattern << "s{3}|c{3}" #contains sss or ccc
-#pattern = ["^c[aouei][a-z]*$"] #starts with c, a wovel, and any letter any number of times
+#pattern = ["^c[aouei][a-z]*$"] #starts with c, a vowel, and any letter any number of times
 #pattern << "(ab){2}" #contains 2 ab
 #pattern << "b{2}"  #contins 2b
 #pattern = "^a[a-z]?$"  #starts with a, 0 or 1 letter after that
@@ -61,7 +61,7 @@ $ end
 #pattern = "^ste(ve|phen|ven)$"  #steve, steven, or stephen
 #pattern = ^ste(ve|phe|)n?$#steve, steven, or stephen
 #pattern = "^(..)*$"   #even length string
-#pattern = "^([^aouei]*[aouei][^aouei]*[aouei][^aouei]*)*$"  #even number of wovels
+#pattern = "^([^aouei]*[aouei][^aouei]*[aouei][^aouei]*)*$"  #even number of vowels
 #| (^[^b]+(b+[^b])*)      # starts with not-b, 0 or more times of any number of b followed 
                          # by one nont-b
 #pattern = "^(b([^b]+b*)*[^b])$"
