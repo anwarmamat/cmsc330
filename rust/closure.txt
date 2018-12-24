@@ -1,0 +1,144 @@
+Rust Closure
+
+single line closure
+
+The closure’s arguments go between the pipes (|),
+and the body is an expression, in this case, x + 1
+
+let plus_one = |x: i32| x + 1;
+assert_eq!(2, plus_one(1));
+
+
+Multi-line closure
+
+let plus_two = |x| {
+    let mut result: i32 = x;
+    result += 1;
+    result += 1;
+    result
+};
+
+assert_eq!(4, plus_two(2));
+
+
+different from regular named functions defined with fn
+
+fn  plus_one_v1   (x: i32) -> i32 { x + 1 }
+let plus_one_v2 = |x: i32| -> i32 { x + 1 };
+let plus_one_v3 = |x: i32|          x + 1  ;
+
+
+This closure refers to a let binding in its scope: num.
+It borrows the binding of num from its scope.
+
+let mut num = 5;
+let plus_num = |x: i32| x + num;
+
+let y = &mut num; // error. cannot borrow `num` as mutable
+because it is also borrowed as immutable
+
+This is ok.
+let mut num = 5;
+{
+    let plus_num = |x: i32| x + num;
+} // `plus_num` goes out of scope; borrow of `num` ends.
+let y = &mut num;
+
+
+
+Vec<T> has ownership over its contents, and therefore, when we
+refer to it in our closure, we have to take ownership of nums.
+It’s the same as if we’d passed nums to a function that took
+ownership of it.
+
+let nums = vec![1, 2, 3];
+let takes_nums = || nums;
+println!("{:?}", nums);
+
+
+move closures
+
+force our closure to take ownership of its environment with
+the move keyword
+
+closure took a mutable reference to num, and then when we called add_num, it
+mutated the underlying value
+let mut num = 5;
+{
+    let mut add_num = |x: i32| num += x;
+    add_num(5);
+}
+num is 10 here
+
+
+
+add_num takes ownership of a copy
+let mut num = 5;
+{
+    let mut add_num = move |x: i32| num += x;
+    add_num(5);
+}
+num is 5 here.
+
+
+
+Closure Implementation
+
+Taking closure as an argument
+
+We take one parameter, and it has the type F.
+We also return an i32. closure takes an i32
+as an argument and returns an i32,
+and so the generic bound we use is Fn(i32) -> i32
+
+
+fn call_with_one<F>(some_closure: F) -> i32
+    where F: Fn(i32) -> i32 {
+    some_closure(1)
+}
+let answer = call_with_one(|x| x + 2);
+assert_eq!(3, answer);
+
+
+Function pointers and closures
+
+function pointer is kind of like a closure that has no
+environment. As such, you can pass a function pointer to
+any function expecting a closure argument, and it will work:
+
+
+fn call_with_one(some_closure: &Fn(i32) -> i32) -> i32 {
+    some_closure(1)
+}
+
+fn add_one(i: i32) -> i32 {
+    i + 1
+}
+let f = add_one;
+
+let answer = call_with_one(&f);
+// same as let answer = call_with_one(&add_one);
+
+assert_eq!(2, answer);
+
+
+FnMut
+FnOnce
+
+
+
+
+Returning Closures
+
+fn factory() -> Box<Fn(i32) -> i32> {
+    let num = 5;
+    Box::new(move |x| x + num)
+}
+let f = factory();
+
+let answer = f(1);
+assert_eq!(6, answer);
+
+By making the inner closure a move Fn, we create a new
+stack frame for our closure. By Boxing it up, we’ve given
+it a known size, allowing it to escape our stack frame.
