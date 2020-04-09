@@ -10,3 +10,13 @@ L->E;L|e
 ## Parser generates the following parse tree
 
 ![Parser ](parsetree.jpg)
+
+
+## How to run
+```
+dune build bin/main.exe
+
+_build/defult/bin/main.exe
+
+xdot parsetree.dot
+```
