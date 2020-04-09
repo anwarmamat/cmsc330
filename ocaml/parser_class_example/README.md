@@ -13,10 +13,15 @@ L->E;L|e
 
 
 ## How to run
+### Compile
 ```
 dune build bin/main.exe
-
+```
+### Run
+```
 _build/defult/bin/main.exe
-
+```
+### See the parse tree
+```
 xdot parsetree.dot
 ```
