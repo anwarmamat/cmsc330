@@ -18,7 +18,9 @@ class Bag
 	def to_s
 		str = String.new
 		str = "("
-		@a.each{|x| str += "#{x}"}
+		@a.each{
+                  |x| str += "#{x}"
+                }
 		str +=")\n"
 	end
 	def each()
@@ -35,7 +37,7 @@ puts s
 sorted = s.sort
 print sorted.inspect
 puts
-d = s.map{|x| x*2}
+d = s.map{|x| x*2}# we did not implement map, collect, select, or find
 puts d.inspect
 
 

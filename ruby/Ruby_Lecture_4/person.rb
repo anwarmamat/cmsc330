@@ -14,11 +14,12 @@ class Student < Person
 end
 
 s = Student.new
+
 s.first_name = 'David'
 s.last_name = 'Smith'
 s.city = 'College Park'
 s.zip_code = '20740'
-s.grades = 9.7
+s.grades = 9.7 # only this one, instance variable of the student class
 
 puts s.full_name
 puts s.city_state_zip
