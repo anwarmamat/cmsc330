@@ -6,7 +6,7 @@ CMSC330 Organiztions of Programming Languages
 
 module type FRACTION =
   sig
-    type fraction (* hide the type *)
+    type fraction = Frac of int*int  (* hide the type *)
     exception BadFrac
     (*val gcd : int * int -> int*) (* gcd is not visible outside the module *)
     val reduce : fraction -> fraction

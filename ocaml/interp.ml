@@ -71,7 +71,9 @@ eval [("x",Int 100)] (Plus(Val (Int 20),Ident "x"));;
 - : value = Int 120
 
 
-let x = 10 in Let x = x+ 1 in x+2;;
+let x = 10 in let x = x+ 1 in x+2;;
+(*
+lex x, and then parse it, then you get *)
 
 eval [] (Let("x", Val(Int 10), Let("x", Plus(Ident "x", Val(Int 1)), 
 			Plus(Ident "x", Val(Int 2)))));;

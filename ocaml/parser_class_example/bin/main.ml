@@ -6,7 +6,8 @@ let root:Node.t = {id=0;label="E"};;
 
 
 let main () =
-  let e = "{x=3; {y=4;};}" in
+  let e = "{}" in 
+  (*let e = "{x=3; {y=4;};}" in*)
   let tokens = tokenize e in 
   let (_,ast) = parse_E root tokens in
   let _ = g_to_dot g "parsetree.dot" in 
