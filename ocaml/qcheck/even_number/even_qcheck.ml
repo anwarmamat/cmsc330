@@ -20,7 +20,6 @@ let  test_even =
   Test.make
     ~name:"test_even"
     ~count:1000 (* number of tests *)
-    (* (g)*)
     (set_shrink shrink_int32  (int_range 1 200))
     (fun n ->
       even n  = (n mod 2 = 0) 
