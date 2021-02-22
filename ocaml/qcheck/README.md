@@ -1,121 +1,112 @@
-(*install:*)
+# QCheck: Property Based Testing for OCaml
 
+## install qcheck:
+```ocaml
 opam install qcheck
-
-(* open QCheck in toplevel *)
-
+```
+## open QCheck in toplevel (utop or ocaml)
+```
 #require "qcheck";;
 open QCheck;;
+#show QCheck
+```
 
+## A Simple Example
+```ocaml
 open QCheck
-
 let mytest = Test.make float (fun f -> floor f <= f)
-(*val mytest : QCheck.Test.t = QCheck.Test.Test <abstr> *)
+let _ = QCheck_runner.run_tests [mytest];;
+# success (ran 1 tests)
+```
 
-let _ = QCheck_runner.run_tests [mytest]
+## Generate Random Values
+An 'a QCheck.Gen.t is a function that takes in a Pseudorandom number generator, uses it to produce a random value of type 'a. For example, QCheck.Gen.int generates random integers, while  QCheck.Gen.string generates random strings. Let us look at some examples here:
 
-
-(* Generate 100 random integers *)
-
+### Generate 100 random integers
+```ocaml
 Gen.generate ~n:100 Gen.int;;
-
-(* Generate 2 int lists *)
-
+```
+### Generate 2 int lists
+```ocaml
 let t = Gen.generate ~n:2 (Gen.list Gen.int);;
-
-(*or *)
-
-let t = Gen.generate ~n:5 (Gen.list Gen.small_int);;
-(* t : int list = [6; 9; 14; 6; 7] *)
-
-
-
-(* check the length of the lists *)
-
+```
+or
+```ocaml
+let t = Gen.generate ~n:2 (Gen.list Gen.small_int);;
 List.map (fun x ->List.length x) t;;
-
-(*
-int list = [46; 32]
-*)
-(* generate 2 string list *)
+# int list = [46; 32]
+```
+### generate 2 string list
+```ocaml
 let s = Gen.generate ~n:2 (Gen.list Gen.string);;
-
-(*
-
 s = [ ["a";"z"]; ["abc";"xyz"...]]
-*)
-
+```
+### generate a string consists of 'a'-'z'
+```ocaml
+Gen.generate1 (Gen.string_of (Gen.char_range 'a' 'z'));;
+```
+## Property Test for List.rev
+```ocaml
 let rec reverse = List.rev;;
-
-let prop_reverse l =
-    rev (rev l) = l
+let prop_reverse l = rev (rev l) = l
 
 let test =QCheck.Test.make ~count:1000 
 ~name:"reverse_test" 
 QCheck.(list small_int) (fun x-> prop_reverse x);;
-
-(* run the test *)
-QCheck.Test.check_exn test;;
-
-(* or *)
 QCheck_runner.run_tests [test];;
+```
 
 
-
-(* passes *)
-
-(* buggy reverse *)
-
+### buggy reverse 
+```ocaml
 let rev l = l;;
-
-(* fails to catch the bug *)
+(* The following property fails to catch the bug *)
 let prop_reverse l =
     rev (rev l) = l
 
+(* improved property test *)
+let prop_reverse2 l1 x l2 =
+             rev (l1@[x]@l2) = rev l2 @ [x] @ rev l1
 
-(* second buggy propery *)
-let prop_reverse2 l =
-    let r = rev (rev l) = l in
-    if List.length l > 1 then r && rev l <> l
-    else r
-    ;;
-
-(* fails at [0;0] *)
-
-(* another try *)
-let prop_reverse3 l =
-    let r = rev (rev l) = l in
-    if List.length l > 1 then r && rev l != l
-    else r
-    ;;
-
-(* fails at [0;0] *)
-(* this test case does not make sense *)
+```
 
 
-(* delete test *)
-
-
+# Another example: delete from a list 
+```ocaml
 let rec delete x l = match l with
    [] -> []
  | (y::ys) -> if x == y then ys
               else y::(delete x ys)
-
+```
+Property of `delete`
+```ocaml
 let prop_delete x l =
    not (List.mem x (delete x l))
-
-
+```
+Create the test
+```ocaml
 let test =QCheck.Test.make ~count:1000 ~name:"reverse_test"
 (QCheck.pair QCheck.small_int QCheck.(list small_int))
 (fun( x, l)-> prop_delete x l)
-
-
+```
+Run the test
+```ocaml
 QCheck_runner.run_tests [test];;
+--- Failure --------------------
+(0, [0; 0])
+```
+The `delete` function failed to delete the other occurences of the given item. Here is fixed `delete':
+```ocaml
+let rec delete x l = match l with
+   [] -> []
+ | (y::ys) -> if x == y then (delete x ys)
+              else y::(delete x ys)
+```
 
 
+## Advanced Features
 
-
-## QCheck Iter
+### QCheck Iter
 ```ocaml
 let t1 = Iter.of_list [1;2;3];;
 
