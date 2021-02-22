@@ -1,7 +1,11 @@
 # Test the pattersn
 # Lists all words from "war and peace" that matched the pattern
 
-pattern = "^b[a-z]*s$"    # starts with b and ends with s
+#pattern = "^b[a-z]*s$"    # starts with b #and ends with s
+
+pattern="^a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*r*t*u*v*w*x*y*z*$"
+
+
 file="war_peace.txt"
 fp = open(file)
 matched_list={}

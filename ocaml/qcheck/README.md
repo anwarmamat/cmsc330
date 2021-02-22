@@ -130,7 +130,7 @@ t3 (fun x-> Printf.printf "%d\t" x);;
 1	2	3	4	5	6
 ```
 
-## <*>
+### <*>
 val (<*>) : ('a -> 'b) t -> 'a t -> 'b t
 
 *convert int list iter to string list iter*
@@ -142,7 +142,7 @@ s1 print_string;;
 123- : unit = ()
 *)
 ```
-## map
+### map
 ```
 let s1 = Iter.map string_of_int t1;;
 (* val s1 : string Iter.t = <fun>*)
@@ -152,7 +152,7 @@ s1 print_string;;
 *)
 ```
 
-## pair
+### pair
 ```ocaml
 let p1 = Iter.pair t1 s1;;
 (*
