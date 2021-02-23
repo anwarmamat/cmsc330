@@ -19,8 +19,7 @@ let test_delete =
     (fun (x,l)-> prop_delete x l)
  ;;
  
-          
-              QCheck_runner.run_tests ~verbose:true [test_delete];;
+ QCheck_runner.run_tests ~verbose:true [test_delete];;
 
 
                                                              
