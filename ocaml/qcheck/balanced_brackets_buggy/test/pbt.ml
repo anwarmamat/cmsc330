@@ -33,7 +33,7 @@ let gen_unbalanced n =
                     let s = (Caml.String.sub x 0 i) ^ y ^ (Caml.String.sub x  i (len-i)) in
                     return s
                  ))
-let shrink_letter2 s  =
+let shrink_brackets s  =
   let str =
     let s1 = String.substr_replace_first s ~pattern:"[]" ~with_:"" in
     let s2 = String.substr_replace_first s ~pattern:"{}" ~with_:"" in 
@@ -47,7 +47,7 @@ let shrink_letter2 s  =
 ;;
 
 (* with shrink*)
-let brackets_with_shrink = make (gen_balanced 10) ?print:(Some (fun x->x)) ?shrink:(Some shrink_letter2)
+let brackets_with_shrink = make (gen_balanced 10) ?print:(Some (fun x->x)) ?shrink:(Some shrink_brackets)
 (* without shrink *)
 let brackets_without_shrink = make (gen_balanced 10) ?print:(Some (fun x->x))
              
@@ -66,8 +66,8 @@ let  test_balanced_bracket =
     ~name:"test_balanced_bracket"
     ~count:100 (* number of tests *)
     (* please try the arbitrary with/without shrink *)
-    (*(brackets_with_shrink)*)    (* with shrink, the counter example always shrinks to [] *)
-     (brackets_without_shrink)    (* without shrink, the counter examnple is longer *)
+    (brackets_with_shrink)    (* with shrink, the counter example always shrinks to [] *)
+    (* (brackets_without_shrink)*)    (* without shrink, the counter examnple is longer *)
     (fun t ->
       balanced t
     )
