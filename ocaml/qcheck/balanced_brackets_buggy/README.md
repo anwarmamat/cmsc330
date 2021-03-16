@@ -1,4 +1,4 @@
-# Check for Balanced Brackets in an Expression
+# QCheck Property Based Testing for Balanced Brackets in an Expression
 
 Given an expression string exp, write a program to examine whether the pairs and the orders of `“{“, “}”, “(“, “)”, “[“, “]”` are correct in exp.
 
