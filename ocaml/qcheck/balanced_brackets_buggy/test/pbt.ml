@@ -2,6 +2,7 @@ open QCheck
 open Base
 open Balanced_bracket
 
+(* generate balanced brackets *)
 let rec gen_balanced n =
   let open Gen in 
   match n with
@@ -33,6 +34,13 @@ let gen_unbalanced n =
                     let s = (Caml.String.sub x 0 i) ^ y ^ (Caml.String.sub x  i (len-i)) in
                     return s
                  ))
+(* 
+Shrink the string by:
+1. delete a [].  Example: ([]) ==> ()
+2. delete a {}.  Example: ([{}]) ==> ([])
+3. delete a (). Example: [()] ==> []
+4. delete the outmost bracket if it is pair. example: {[]()} ==> []()
+ *)               
 let shrink_brackets s  =
   let str =
     let s1 = String.substr_replace_first s ~pattern:"[]" ~with_:"" in
@@ -46,11 +54,13 @@ let shrink_brackets s  =
     Iter.of_list str
 ;;
 
+(* make an arbitrary with the generator and shirnker *)
 (* with shrink*)
 let brackets_with_shrink = make (gen_balanced 10) ?print:(Some (fun x->x)) ?shrink:(Some shrink_brackets)
 (* without shrink *)
 let brackets_without_shrink = make (gen_balanced 10) ?print:(Some (fun x->x))
              
+(* make tests *)
 let  test_unbalanced_bracket = 
   Test.make
     ~name:"test_unbalanced_bracket"
