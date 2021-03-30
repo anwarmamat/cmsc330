@@ -9,7 +9,7 @@ module Node   = struct
   (*type t = int*)
    type t = {id:int;label:string}
 
-   (* let compare = Pervasives.compare*)
+   (* let compare = Stdlib.compare*)
    let hash = Hashtbl.hash
    let equal = (=)
    
@@ -23,7 +23,7 @@ end
 (* representation of an edge -- must be comparable *)
 module Edge = struct
    type t = string
-   let compare = Pervasives.compare
+   let compare = Stdlib.compare
    let equal = (=)
    let default = ""
 end
