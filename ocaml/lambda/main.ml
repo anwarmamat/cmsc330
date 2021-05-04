@@ -48,13 +48,6 @@ let rec to_int e = match e with
 ;;             
 
 
-let r = parse  "Lx.x y";;
-print_string "string: Lx.x y";;
-print_string "\nLambda Expression: ";;
-print_string (lambda_exp_2_str r);;
-print_string "\nparsed string: ";;
-print_lambda r;;
-print_string "\n";;
 
   
 let myzero = parse "Lf.Lx.x";;
@@ -70,24 +63,93 @@ let mytrue  = parse "Lx. Ly. x";;
 let myfalse = parse "Lx.Ly. y";;
 let myif = parse "La. Lb. Lc. a b c";;
 let mynot  = parse "Lb. Lx. Ly.  b y x"
-let myand = parse "La. Lb.parse Lx. Ly. b (a x y) y";;
+let myand = parse "La. Lb. Lx. Ly. b (a x y) y";;
 let myor = parse "La. Lb. Lx. Ly.  b x (a x y)";;
 let iszero  =parse "Ln. n (Lx. (Lx.Ly. y)) (Lx. Ly. x)"
 let mypred = parse "Ln. Lf. Lx. n (Lg.  Lh.  h (g f)) (Lu.x) (Lu. u)";;
 let myminus = parse "Lm. Ln. (n Ln. Lf. Lx. n (Lg.  Lh.  h (g f)) (Lu.x) (Lu. u)) m";;
 let mydiv = parse " (Ln.((Lf.(Lx.x x) (Lx.f (x x))) (Lc.Ln.Lm.Lf.Lx.(Ld.(Ln.n (Lx.(La.Lb.b)) (La.Lb.a)) d ((Lf.Lx.x) f x) (f (c d m f x))) ((Lm.Ln.n (Ln.Lf.Lx.n (Lg.Lh.h (g f)) (Lu.x) (Lu.u)) m) n m))) ((Ln.Lf.Lx. f (n f x)) n))";;
+
+(* Example 0 *)
+let r = parse  "Lx.x y";;
+print_string "string: Lx.x y";;
+print_string "\nLambda Expression: ";;
+print_string (lambda_exp_2_str r);;
+print_string "\nparsed string: ";;
+print_lambda r;;
+print_string "\n";;
+
+(* Example 1 *)
+
+(* and true true  *)
+let e = App(App(myand, mytrue),mytrue);;
+
+(* e2 = if e then 1 else 2 
+   myif e 1 2 
+*)
+let e2 = App(App(App(myif, e), myone),mytwo);;
+let e2 = reduce_multi e2;;
+let () = print_lambda e2;;
+let () = Printf.printf "\nif true then 1 else 2 = %d\n" (to_int e2);;
+
+(*Example 2 *)
+
+(* and true false  *)
+let e = App(App(myand, mytrue),myfalse);;
   
+(* 
+   let e = false
+e2 = if e then 1  else 2 
+   myif e 1 2 
+*)
+let e2 = App(App(App(myif, e), myone),mytwo);;
+let e2 = reduce_multi e2;;
+let () = print_lambda e2;;
+let () = Printf.printf "\nif false then 1 else 2 = %d\n" (to_int e2)
+
+(* Example 3: Addition
+  a = 3 + 2
+
+ *)
+let e1 = App(App(myplus, mythree), mytwo);;
+let e2 = reduce_multi e1;;
+let () = Printf.printf "\n 3 + 2 = %d\n" (to_int e2)      
+
+(* Example 4  Multiplication 
+   let e1 = 3 + 2
+   let e2 = 3 + 1
+   let e3 = e1 * e2
+*)
+let e1 = App(App(myplus, mythree), mytwo);;
+let e2 = App(mysucc, mythree);;
+let e3 = App(App(mymult, e1),e2)
+let e4 = reduce_multi e3
+let () = Printf.printf "\n 5 * 4 = %d\n" (to_int e4)      
+(* let e5 = (e3+e2) * e4  
+             (5 + 4 ) * 20
+ *)
+let e5 = App(App(mymult,(App(App(myplus,e1),e2))),e4);;
+                                                    
+let e6 = reduce_multi e5;;       
+let () = Printf.printf "\n (5 + 4) * 20 = %d\n" (to_int e6)      
+
 (*
    Y = \f.(\x. f (x x)) (\x. f (x x))
   fact = \f.\n. if n = 0 then 1 else n * (f (n -1))
 
+ *)
+
+
+       
+(* Example 4 
+   fact(3)
+
 *)
+       
 
 let yfix = parse "Lf.(Lx. f (x x)) (Lx. f (x x))"
 
 let if2 (a,b,c) = App(App(App(myif,a),b),c);;
-
-
 let fact1 = 
    Lam ("f",
    Lam ("n",
@@ -102,24 +164,36 @@ let fact1 =
       ))
 ;;      
 
-(* caclutate factorial of 3  *)
-let e  =App(App(yfix, fact1), mythree)
-;;
+(* calculate factorial of 3  *)
+let e  =App(App(yfix, fact1), mythree);;
+
+(* print the factorial 3 as int *)
+let x = to_int (reduce_multi e)   (*  6 *);;
+print_string "\nfact(3) = ";;
+print_int x;;
+print_string "\n";;
+ 
+
+(*
+(* calculate factorial of 5  *)
+let e  = App(App(yfix, fact1), App(App(myplus,mythree),mytwo));;
 
 (* print the factorial 3 as int *)
 let x = to_int (reduce_multi e)   (*  6 *)
 ;;
-  print_string "fact(3) = ";;
-  print_int x;;
-    print_string "\n";;
+print_string "fact(5) = ";;
+print_int x;;
+print_string "\n";;
+ *)
 
-
+(*
 (* m = 2 + 3 *)
 let m =  (App(App(myplus,mytwo),mythree));;
 print_string "2+3=";;
 print_int(to_int (reduce_multi m));;
 print_string "\n";;
-    
+ *)
+(*
 (* n = 2 * succ(n) = 2 * 6 = 12 *)
 let n = App(App(mymult, mytwo), App(mysucc,m));;
 let s = reduce_multi n;;
@@ -128,7 +202,9 @@ print_lambda s;;
 print_string " = " ;;
 print_int (to_int s);;
 print_string "\n\n";;
+ *)
 
+(*
 (*   succ(4) / 2  *)
 let e = App(App(mydiv,App(mysucc,mythree)),mytwo);;
 print_string "Division example:\n";;
@@ -138,7 +214,7 @@ print_lambda (reduce_multi e);;
 print_string " = " ;;
 print_int (to_int (reduce_multi e));;
 print_string "\n";;
-
+ *)
 
 (*
 let m = reduce20 m;;

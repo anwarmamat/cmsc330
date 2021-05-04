@@ -168,7 +168,7 @@ let rec _menhir_goto_expr : _menhir_env -> 'ttv_tail -> _menhir_state -> 'tv_exp
             _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState12) : 'freshtv54)
     | _ ->
         let (() : unit) = () in
-        ((Printf.fprintf Pervasives.stderr "Internal failure -- please contact the parser generator's developers.\n%!";
+        ((Printf.fprintf Stdlib.stderr "Internal failure -- please contact the parser generator's developers.\n%!";
         assert false) : 'freshtv55)
 
 and _menhir_goto_t : _menhir_env -> 'ttv_tail -> _menhir_state -> 'tv_t -> 'ttv_return =

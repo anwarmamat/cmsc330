@@ -114,9 +114,7 @@ and print_lambda = function
       open_hovbox 1;
       kwd "\\"; ident s; kwd "."; print_space(); print_lambda lam;
       close_box()
-      
   | e -> print_app e;;
-
 
 let rec lambda_exp_2_str e =
   match e with
