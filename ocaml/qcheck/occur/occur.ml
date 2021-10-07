@@ -16,7 +16,6 @@ let count_occ lst target =
 
 let gen_occur =
   make (
-      
   let open Gen in
   small_int >>= (
     fun n -> list (int_range min_int (n-1)) >>=
@@ -29,6 +28,7 @@ let gen_occur =
                                           
   )))
     )
+
 let test_count_occ2 =
   Test.make
  ~name:"test_count_occ2"

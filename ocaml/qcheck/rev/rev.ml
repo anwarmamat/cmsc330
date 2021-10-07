@@ -1,3 +1,5 @@
+(*try this example in UTOP *)
+
 #require "qcheck";;
 
 open QCheck
