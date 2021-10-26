@@ -4,7 +4,7 @@ Recursive Descent Parser for
 
   S -> AB
   A-> 0A | Epsilon
-  B-> 1A | Epsilon
+  B-> 1B | Epsilon
 *)
 
 exception ParseError of string
@@ -38,9 +38,10 @@ type ast = S of char
 let rec parse_S tokens =
   let t = lookahead tokens in
   match t with
-    '0' ->let _=  Printf.printf "S->A\n" in
-          parse_A tokens
-   |'1' -> let _=  Printf.printf "S->A\n" in
+    '0' ->let _=  Printf.printf "S->AB\n" in
+          let t1 = parse_A tokens in 
+          parse_B t1
+   |'1' -> let _=  Printf.printf "S->B\n" in
            parse_B tokens
    |_->tokens
      
