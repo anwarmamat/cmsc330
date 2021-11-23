@@ -29,12 +29,12 @@ let match_tok a tokens =
   | h::t when a = h -> t
   | _ -> raise (ParseError "bad match")
 
-
+(*
 type ast = S of char
          | A of char
          | B of char
          | Epsilon
-
+ *)
 let rec parse_S tokens =
   let t = lookahead tokens in
   match t with
