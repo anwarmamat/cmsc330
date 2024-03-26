@@ -79,7 +79,7 @@ eval [] (Let("x", Val(Int 10), Let("x", Plus(Ident "x", Val(Int 1)),
 			Plus(Ident "x", Val(Int 2)))));;
 
 
-let x = 10 in Let y = x+ 1 in y+2;;
+let x = 10 in Let y = x+ 1 in x+y;;
 
 eval [] (Let("x", Val(Int 10), Let("y", Plus(Ident "x", Val(Int 1)), 
 			Plus(Ident "x", Ident "y"))));;
