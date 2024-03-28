@@ -31,7 +31,7 @@ let gen_unbalanced n =
   t  >>= fun x-> (p >>= (fun y ->
                     let len = String.length x in 
                     let i = Random.int len in 
-                    let s = (Caml.String.sub x 0 i) ^ y ^ (Caml.String.sub x  i (len-i)) in
+                    let s = (Stdlib.String.sub x 0 i) ^ y ^ (Stdlib.String.sub x  i (len-i)) in
                     return s
                  ))
 (* 
